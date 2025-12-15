@@ -1,0 +1,217 @@
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+import { Currency, USDPrices } from "./types";
+import { Balances } from "./types";
+import BN from "bignumber.js";
+import { formatUnits, zeroAddress } from "viem";
+import _ from "lodash";
+import { wCurrencies } from "./wrapped-currencies";
+import {
+  DEFAULT_TOKENS,
+  NATIVE_TOKENS_LOGO_URLS,
+  POPULAR_TOKENS,
+} from "./consts";
+import * as chains from "viem/chains";
+
+export const getBaseCurrencies = (chainId?: number) => {
+  return POPULAR_TOKENS[chainId as keyof typeof POPULAR_TOKENS] ?? [];
+};
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
+export const eqCompare = (a: string, b: string) => {
+  return a.toLowerCase() === b.toLowerCase();
+};
+
+export const isNativeAddress = (address?: string) => {
+  return eqCompare(address ?? "", zeroAddress);
+};
+
+export const getWrappedNativeCurrency = (chainId: number) => {
+  return wCurrencies[chainId];
+};
+
+const isBaseToken = (t: Currency, chainId?: number) => {
+  const baseCurrencies = getBaseCurrencies(chainId).map((t) => t.toLowerCase());
+  return baseCurrencies.includes(t.address.toLowerCase());
+};
+
+export const sortByBaseAssets = (currencies: Currency[], chainId?: number) => {
+  return currencies.sort((a, b) => {
+    const baseA = isBaseToken(a, chainId);
+    const baseB = isBaseToken(b, chainId);
+
+    if (baseA !== baseB) {
+      return baseA ? -1 : 1; // base first
+    }
+
+    return 0;
+  });
+};
+
+export const sortTokens = (
+  currencies: Currency[],
+  chainId?: number,
+  usdPrices?: USDPrices,
+  balances?: Balances
+) => {
+  const valueMap = new Map<string, number>(); // keep as number (you said losing precision is ok)
+
+  // Pre-compute USD values
+  for (const currency of currencies) {
+    const raw = balances?.[currency.address] ?? "0";
+
+    // Format balance -> decimal string -> number
+    const balance = Number(
+      BN(formatUnits(BigInt(raw.toString()), currency.decimals))
+        .decimalPlaces(6)
+        .toString()
+    );
+
+    const usdPrice = usdPrices?.[currency.address] ?? 0;
+    const usdValue = balance * usdPrice;
+
+    valueMap.set(currency.address, usdValue);
+  }
+
+  const res = [...currencies].sort((a, b) => {
+    const valueA = valueMap.get(a.address) ?? 0;
+    const valueB = valueMap.get(b.address) ?? 0;
+
+    // 1. Primary: USD value DESC
+    if (valueA !== valueB) {
+      return valueB - valueA; // DESC
+    }
+
+    return 0;
+  });
+  const uniqueRes = _.uniqBy(res, (t) => t.address.toLowerCase());
+
+  const nativeIndex = uniqueRes.findIndex((t) => isNativeAddress(t.address));
+  if (nativeIndex !== -1) {
+    const native = uniqueRes[nativeIndex];
+    uniqueRes.splice(nativeIndex, 1);
+    uniqueRes.unshift(native);
+  }
+
+  return uniqueRes;
+};
+
+export function formatDecimals(
+  value?: string,
+  scale = 6,
+  maxDecimals = 8
+): string {
+  if (!value) return "";
+
+  // ─── keep the sign, work with the absolute value ────────────────
+  const sign = value.startsWith("-") ? "-" : "";
+  const abs = sign ? value.slice(1) : value;
+
+  const [intPart, rawDec = ""] = abs.split(".");
+
+  // Fast-path: decimal part is all zeros (or absent) ───────────────
+  if (!rawDec || Number(rawDec) === 0) return sign + intPart;
+
+  /** Case 1 – |value| ≥ 1 *****************************************/
+  if (intPart !== "0") {
+    const sliced = rawDec.slice(0, scale);
+    const cleaned = sliced.replace(/0+$/, ""); // drop trailing zeros
+    const trimmed = cleaned ? "." + cleaned : "";
+    return sign + intPart + trimmed;
+  }
+
+  /** Case 2 – |value| < 1 *****************************************/
+  const firstSigIdx = rawDec.search(/[^0]/); // first non-zero position
+  if (firstSigIdx === -1) return "0"; // decimal part is all zeros
+  if (firstSigIdx + 1 > maxDecimals) return "0"; // too many leading zeros → 0
+
+  const leadingZeros = rawDec.slice(0, firstSigIdx); // keep them
+  const significantRaw = rawDec.slice(firstSigIdx).slice(0, scale);
+  const significant = significantRaw.replace(/0+$/, ""); // trim trailing zeros
+
+  return significant ? sign + "0." + leadingZeros + significant : "0";
+}
+
+export const parseNativeCurrencyAddress = (
+  address: string,
+  chainId: number
+) => {
+  if (isNativeAddress(address)) {
+    return getWrappedNativeCurrency(chainId).address;
+  }
+  return address;
+};
+
+export const getNativeTokenLogoUrl = (chainId: number) => {
+  return (
+    NATIVE_TOKENS_LOGO_URLS[chainId as keyof typeof NATIVE_TOKENS_LOGO_URLS] ??
+    ""
+  );
+};
+
+export const getDefaultTokensForChain = (chainId = 56) => {
+  const defaultTokens = DEFAULT_TOKENS[chainId as keyof typeof DEFAULT_TOKENS];
+  if (!defaultTokens) {
+    return undefined;
+  }
+  return defaultTokens;
+};
+
+export const getChainName = (chainId: number) => {
+  return (
+    Object.values(chains).find((chain) => chain.id === chainId)?.name ?? ""
+  );
+};
+
+export const getPopularTokenForChain = (chainId?: number) => {
+  if (!chainId) {
+    return [];
+  }
+  return POPULAR_TOKENS[chainId as keyof typeof POPULAR_TOKENS] ?? [];
+};
+
+export const makeElipsisAddress = (
+  address?: string,
+  padding?: { start: number; end: number }
+): string => {
+  if (!address) return "";
+  return `${address.substring(0, padding?.start || 6)}...${address.substring(
+    address.length - (padding?.end || 5)
+  )}`;
+};
+
+export const getExplorerUrl = (chainId?: number, txHash?: string) => {
+  if (!chainId || !txHash) {
+    return "";
+  }
+  const explorer = Object.values(chains).find((chain) => chain.id === chainId)
+    ?.blockExplorers?.default;
+  if (!explorer) {
+    return "";
+  }
+  return `${explorer.url}/tx/${txHash}`;
+};
+
+export const filterCurrencies = (
+  currencies?: Currency[],
+  query?: string[]
+): Currency[] => {
+  if (!currencies || !query || query.length === 0) return currencies ?? [];
+
+  const keys: (keyof Currency)[] = ["name", "symbol", "address"];
+  const normalizedQuery = query.map((q) => q.toLowerCase());
+
+  return currencies.filter((currency) =>
+    keys.some((key) => {
+      const value = currency[key];
+      if (typeof value !== "string") return false;
+
+      const lowerValue = value.toLowerCase();
+
+      return normalizedQuery.some((q) => lowerValue.includes(q));
+    })
+  );
+};
