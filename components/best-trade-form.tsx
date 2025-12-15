@@ -146,8 +146,8 @@ const SubmitSwap = () => {
     outputAmount,
     isLoadingQuote,
   } = useDerivedSwap();
-  const { setInputAmount } = useActionHandlers();
-  const { status, totalSteps, currentStepIndex } = useSwapBestTrade();
+  const { setInputAmount, } = useActionHandlers();
+  const { status, totalSteps, currentStepIndex, reset } = useSwapBestTrade();
   const inputAmountF = useFormatNumber({ value: inputAmount });
   const outputAmountF = useFormatNumber({ value: outputAmount });
 
@@ -172,10 +172,18 @@ const SubmitSwap = () => {
     }
   }, [setInputAmount, status]);
 
+
+  const onOpen = useCallback(() => {
+    setOpen(true);
+   if(status !== SwapStatus.LOADING) {
+    reset();
+   }
+  }, [reset, status]);
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <SubmitSwapButton
-        onClick={() => setOpen(true)}
+        onClick={onOpen}
         isLoading={isLoadingQuote}
         text={isLoadingQuote ? "Fetching Quote..." : "Submit Swap"}
       />
@@ -247,7 +255,7 @@ const Main = () => {
 };
 
 export function SwapBestTradeForm() {
-  const { inputCurrency, outputCurrency, inputAmount, outputAmount } =
+  const { inputCurrency, outputCurrency, inputAmount, outputAmount, isLoadingQuote } =
     useDerivedSwap();
   const { setInputAmount, handleCurrencyChange } = useActionHandlers();
 
@@ -272,6 +280,7 @@ export function SwapBestTradeForm() {
           disabled={true}
           amount={outputAmount}
           title="To"
+          isLoading={isLoadingQuote}
         />
       </div>
       <SubmitSwap />

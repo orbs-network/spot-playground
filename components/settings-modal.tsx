@@ -4,15 +4,13 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "./ui/dialog";
 import { InfoIcon, SettingsIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { useSettings } from "@/lib/hooks/use-settings";
 import { NumericInput } from "./ui/numeric-input";
 import { useIsSpotTab } from "@/lib/hooks/use-tabs";
-import { DEFAULT_PRICE_PROTECTION } from "@/lib/consts";
-import { DEFAULT_SLIPPAGE } from "@orbs-network/liquidity-hub-sdk";
+import { DEFAULT_PRICE_PROTECTION, DEFAULT_SLIPPAGE } from "@/lib/consts";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 const FormItem = ({

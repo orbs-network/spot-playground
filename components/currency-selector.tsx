@@ -28,6 +28,7 @@ import { AvatarImage } from "@radix-ui/react-avatar";
 import { Input } from "./ui/input";
 import { Skeleton } from "./ui/skeleton";
 import { useCurrencies } from "@/lib/hooks/use-currencies";
+import { CurrencyLogo } from "./ui/currency-logo";
 
 type Props = {
   onCurrencyChange: (currency: Currency) => void;
@@ -112,6 +113,9 @@ export function CurrencySelector({ onCurrencyChange, trigger }: Props) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
   const { currencies, isLoading } = useCurrencies(search);
+
+  const isEmptyList = !isLoading && currencies.length === 0;
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       {trigger ? (
@@ -130,7 +134,7 @@ export function CurrencySelector({ onCurrencyChange, trigger }: Props) {
         <SearchInput onChange={setSearch} value={search} />
         <PopularTokens onCurrencyChange={onCurrencyChange} />
         <div className="flex flex-col gap-2 h-[80vh] max-h-[500px] overflow-y-auto">
-          {isLoading ? (
+          {isEmptyList ? <div className="flex items-center justify-center h-full">No results found</div> : isLoading ? (
             <Loader />
           ) : (
             <Virtuoso
@@ -172,10 +176,7 @@ const CurrencyItem = ({
         onClick={() => onCurrencyChange(currency)}
       >
         <div className="flex items-center gap-3 flex-1 overflow-hidden text-ellipsis whitespace-nowrap">
-          <Avatar className="size-10">
-            <AvatarImage src={currency.logoUrl} alt={currency.name} />
-            <AvatarFallback>{currency.symbol}</AvatarFallback>
-          </Avatar>
+          <CurrencyLogo currency={currency} />
           <div className="flex flex-col items-start flex-1">
             <p className="text-[16px] font-medium overflow-hidden text-ellipsis whitespace-nowrap max-w-[calc(100%-20px)]">
               {currency.name}

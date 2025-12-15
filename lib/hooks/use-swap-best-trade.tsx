@@ -233,5 +233,6 @@ export const useSwapBestTrade = () => {
     totalSteps,
     currentStepIndex,
     txHash,
+    reset: resetStore,
   };
 };

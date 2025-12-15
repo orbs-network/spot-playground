@@ -215,3 +215,10 @@ export const filterCurrencies = (
     })
   );
 };
+
+
+export function getFirstAndLastLetter(symbol?: string): string {
+  if (!symbol) return "";
+  const s = symbol.trim().toUpperCase();
+  return s.length <= 1 ? s : `${s[0]}${s[s.length - 1]}`;
+}

@@ -11,6 +11,7 @@ import BN from "bignumber.js";
 import { formatDecimals } from "@/lib/utils";
 import { USD } from "./ui/usd";
 import { Balance } from "./ui/balance";
+import { CurrencyLogo } from "./ui/currency-logo";
 
 type Props = {
   currency?: Currency;
@@ -25,10 +26,8 @@ type Props = {
 
 const CurrencySelectorTrigger = ({ currency }: { currency?: Currency }) => {
   return (
-    <div className="w-full cursor-pointer bg-secondary p-2 flex items-center gap-1 border border-border rounded-full">
-      <Avatar className="size-6">
-        <AvatarImage src={currency?.logoUrl} />
-      </Avatar>
+    <div className="w-full cursor-pointer bg-secondary p-[6px] flex items-center gap-1 border border-border rounded-full">
+      <CurrencyLogo currency={currency} className="size-7" />
       <p className="text-sm whitespace-nowrap font-medium">
         {currency?.symbol}
       </p>
