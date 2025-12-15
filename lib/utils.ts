@@ -53,7 +53,6 @@ export const sortByBaseAssets = (currencies: Currency[], chainId?: number) => {
 
 export const sortTokens = (
   currencies: Currency[],
-  chainId?: number,
   usdPrices?: USDPrices,
   balances?: Balances
 ) => {

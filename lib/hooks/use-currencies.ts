@@ -67,9 +67,9 @@ const useAllCurrencies = () => {
 
   const result = useMemo(() => {
     if (!currencies) return [];
-    const sorted = sortTokens(currencies, chainId, usdPrices, balances);
+    const sorted = sortTokens(currencies, usdPrices, balances);
     return sorted;
-  }, [currencies, balances, usdPrices, chainId]);
+  }, [currencies, balances, usdPrices]);
 
   return {
     currencies: result,

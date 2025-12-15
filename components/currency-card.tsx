@@ -72,7 +72,7 @@ const PercentageButtons = ({
     [balance, onAmountChange]
   );
   return (
-    <div className="cursor-pointer flex items-center gap-1 justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300 absolute right-[10px] top-[10px]">
+    <div className="cursor-pointer flex items-center gap-1 justify-end  absolute right-[10px] top-[10px]">
       {PERCENTAGE_BUTTONS.map((button) => (
         <div
           key={button.value}

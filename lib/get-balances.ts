@@ -25,7 +25,7 @@ export const getBalances = async (
       address: address as `0x${string}`,
     });
 
-    const result = tokens.reduce(
+    const result = tokensWithoutNative.reduce(
       (acc, token, index) => ({
         ...acc,
         [token]: balances[index]?.result?.toString() ?? "0",
