@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type Currency = {
     address: string;
     symbol: string;
@@ -41,4 +42,17 @@ export enum TABS {
     STOP_LOSS = "STOP_LOSS",
     TAKE_PROFIT = "TAKE_PROFIT",
   }
+
+
+
   
+
+  export type BestTradeQuote = {
+    outAmount: string;
+    minAmountOut: string;
+    inToken: string;
+    outToken: string;
+    inAmount: string;
+    gas: string;
+    originalQuote: any;
+  }

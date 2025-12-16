@@ -23,7 +23,7 @@ export const SubmitSwapButton = ({
   const { address, chainId: currentChainId } = useConnection();
   const { openConnectModal } = useConnectModal();
   const { switchChain } = useSwitchChain();
-  const { inputCurrency, outputCurrency, parsedInputAmount, isLoadingQuote } = useDerivedSwap();
+  const { inputCurrency, outputCurrency, parsedInputAmount, isLoadingTrade, trade } = useDerivedSwap();
   const inputTokenBalance = useBalance(inputCurrency).wei;
 
   const insufficientBalance = useMemo(() => {
@@ -31,20 +31,25 @@ export const SubmitSwapButton = ({
   }, [inputTokenBalance, parsedInputAmount]);
   const enterAmount = BN(parsedInputAmount ?? "0").eq(0) 
 
-  const _disabled = disabled || !inputCurrency || !outputCurrency || isLoading || insufficientBalance || enterAmount;
+  const insufficientLiquidity = !isLoadingTrade && BN(trade?.outAmount ?? "0").isZero();
+
+  const _disabled = disabled || !inputCurrency || !outputCurrency || isLoading || insufficientBalance || enterAmount || insufficientLiquidity;
 
   const _text = useMemo(() => {
     if (enterAmount) {
       return "Enter an amount";
     }
-    if (isLoadingQuote) {
+    if (isLoadingTrade) {
       return "Fetching quote...";
     }
     if (insufficientBalance) {
       return "Insufficient balance";
     }
+    if(insufficientLiquidity) {
+      return "Insufficient liquidity";
+    }  
     return text;
-  }, [enterAmount, insufficientBalance, text, isLoadingQuote]);
+  }, [enterAmount, insufficientBalance, text, isLoadingTrade, insufficientLiquidity]);
 
 
   if (!address) {
@@ -72,7 +77,7 @@ export const SubmitSwapButton = ({
   }
 
   return (
-    <Button onClick={onClick} isLoading={isLoading} disabled={_disabled}>
+    <Button onClick={onClick} isLoading={isLoading  && !insufficientLiquidity} disabled={_disabled}>
       {_text}
     </Button>
   );

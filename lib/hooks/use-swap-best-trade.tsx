@@ -1,4 +1,4 @@
-import { isFreshQuote, permit2Address } from "@orbs-network/liquidity-hub-sdk";
+import { isFreshQuote, permit2Address, Quote } from "@orbs-network/liquidity-hub-sdk";
 import { useMutation } from "@tanstack/react-query";
 import { useSignEip } from "./use-sign-eip";
 import { useApproval } from "./use-approval";
@@ -18,23 +18,24 @@ import TokensPair from "@/components/tokens-pair";
 import { useConnection } from "wagmi";
 
 const usePrepareQuote = () => {
-  const { quote, refetchQuote } = useDerivedSwap();
+  const { trade, refetchTrade } = useDerivedSwap();
 
   return useMutation({
     mutationFn: async () => {
-      if (!quote) {
+      if (!trade) {
         throw new Error("Quote not found");
       }
+      const originalQuote = trade.originalQuote as Quote;
       
-      if (isFreshQuote(quote, 60)) {
-        return quote;
+      if (isFreshQuote(originalQuote, 60)) {
+        return originalQuote;
       }
-      const freshQuote = (await refetchQuote())?.data;
+      const freshQuote = (await refetchTrade())?.data?.originalQuote as Quote | undefined;
       if (!freshQuote) {
-        return quote;
+        return originalQuote;
       }
-      if (BN(freshQuote.minAmountOut).lt(BN(quote.minAmountOut))) {
-        return quote;
+      if (BN(freshQuote.minAmountOut).lt(BN(originalQuote.minAmountOut))) {
+        return originalQuote;
       }
       return freshQuote;
     },

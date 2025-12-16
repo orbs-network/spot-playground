@@ -21,14 +21,14 @@ export const useDerivedSwap = () => {
   );
 
   const {
-    data: quote,
-    isLoading: isLoadingQuote,
-    refetch: refetchQuote,
+    data: trade,
+    isLoading: isLoadingTrade,
+    refetch: refetchTrade,
   } = useTrade(inputCurrency, outputCurrency, parsedInputAmount);
 
   const outputAmount = useFormatDecimals(useToAmountUI(
     outputCurrency?.decimals,
-    quote?.outAmount
+    trade?.outAmount
   ));
 
   return {
@@ -37,9 +37,9 @@ export const useDerivedSwap = () => {
     swapType: swapType as SwapType,
     inputAmount: store.inputAmount,
     parsedInputAmount,
-    quote,
-    isLoadingQuote,
-    refetchQuote,
+    trade,
+    isLoadingTrade,
+    refetchTrade,
     outputAmount,
   };
 };

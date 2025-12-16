@@ -18,8 +18,6 @@ export const useBalances = () => {
         address,
         tokens: addresses,
       });
-
-      console.log(response.data);
       
       return response.data;
     },

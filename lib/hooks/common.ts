@@ -1,13 +1,11 @@
 import { useMemo } from "react";
-import { formatUnits, parseUnits } from "viem";
-import { formatDecimals, parseNativeCurrencyAddress } from "../utils";
+import { formatDecimals, parseNativeCurrencyAddress, toAmountUI, toAmountWei } from "../utils";
 import {useNumericFormat} from "react-number-format";
 import { useConnection } from "wagmi";
 
 export const useToAmountUI = (decimals?: number, value?: string) => {
     return useMemo(() => {
-        if (!decimals || !value) return "0";
-        return formatUnits(BigInt(value), decimals);
+       return toAmountUI(value, decimals);
     }, [decimals, value]);
 };
 
@@ -20,8 +18,7 @@ export const useFormatDecimals = (value?: string,decimals = 6) => {
 
 export const useToAmountWei = (decimals?: number, value?: string) => {
     return useMemo(() => {
-        if (!decimals || !value) return "0";
-        return parseUnits(value, decimals).toString();
+        return toAmountWei(value, decimals);
     }, [decimals, value]);
 };
 

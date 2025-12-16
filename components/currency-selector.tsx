@@ -45,6 +45,7 @@ const PopularTokens = ({
   const popularTokens = getPopularTokenForChain(chainId);
 
   const popularCurrencies = useMemo(() => {
+    if(!popularTokens.length) return [];
     return (
       filterCurrencies(currencies, popularTokens.map((t) => t.toLowerCase()))
     );

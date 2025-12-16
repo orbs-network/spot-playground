@@ -26,7 +26,7 @@ type Props = {
 
 const CurrencySelectorTrigger = ({ currency }: { currency?: Currency }) => {
   return (
-    <div className="w-full cursor-pointer bg-secondary p-[6px] flex items-center gap-1 border border-border rounded-full">
+    <div className="w-full cursor-pointer bg-secondary p-[6px] flex items-center gap-1 border border-border rounded-full hover:bg-accent/80">
       <CurrencyLogo currency={currency} className="size-7" />
       <p className="text-sm whitespace-nowrap font-medium">
         {currency?.symbol}
@@ -65,6 +65,7 @@ const PercentageButtons = ({
   const { ui: balance } = useBalance(currency);
   const onPercentageClick = useCallback(
     (percentage: number) => {
+      if(BN(balance).lte(0)) return;
       onAmountChange(
         formatDecimals(BN(balance).times(percentage).toString(), 8)
       );
@@ -76,7 +77,7 @@ const PercentageButtons = ({
       {PERCENTAGE_BUTTONS.map((button) => (
         <div
           key={button.value}
-          className="cursor-pointer bg-secondary px-2 text-[12px] font-medium flex items-center gap-1 border border-border rounded-full"
+          className="cursor-pointer bg-secondary px-2 py-1 text-[12px] font-medium flex items-center gap-1 border border-border rounded-full hover:bg-accent/80"
           onClick={() => onPercentageClick(button.value)}
         >
           {button.label}

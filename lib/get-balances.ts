@@ -20,6 +20,7 @@ export const getBalances = async (
         args: [address],
       })) as any[],
     });
+    
 
     const nativeBalance = await publicClient.getBalance({
       address: address as `0x${string}`,

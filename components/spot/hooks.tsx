@@ -7,12 +7,17 @@ import {
   OnCancelOrderSuccess,
   OnWrapSuccessCallback,
   ParsedError,
+  Partners,
+  Token,
 } from "@orbs-network/twap-ui";
 import { useCallback, useMemo, useRef } from "react";
 import { toast } from "sonner";
 import { useConnection } from "wagmi";
 import { Order } from "@orbs-network/twap-ui";
 import TokensPair from "../tokens-pair";
+import { useCurrency } from "@/lib/hooks/use-currencies";
+import * as chains from "viem/chains";
+import { useConfigParams } from "@/lib/hooks/use-config-params";
 
 const useCallbacks = () => {
   const wrapToastId = useRef<number>(null);
@@ -61,21 +66,24 @@ const useCallbacks = () => {
     }) as number;
   }, [symbol]);
 
-  const onApproveSuccess = useCallback(({ explorerUrl }: OnApproveSuccessCallback) => {
-    toast.success(`Approved ${symbol}`, {
-      id: approveToastId.current as number,
-      description: (
-        <a
-          href={explorerUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm text-blue-500 hover:text-blue-600"
-        >
-          View on explorer
-        </a>
-      ),
-    });
-  }, [symbol]);
+  const onApproveSuccess = useCallback(
+    ({ explorerUrl }: OnApproveSuccessCallback) => {
+      toast.success(`Approved ${symbol}`, {
+        id: approveToastId.current as number,
+        description: (
+          <a
+            href={explorerUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm text-blue-500 hover:text-blue-600"
+          >
+            View on explorer
+          </a>
+        ),
+      });
+    },
+    [symbol]
+  );
 
   const onSignOrderRequest = useCallback(() => {
     createOrderToastId.current = toast.loading(
@@ -127,7 +135,7 @@ const useCallbacks = () => {
         id: createOrderToastId.current as number,
         duration: 10_000,
         closeButton: true,
-        description: ''
+        description: "",
       }
     );
   }, []);
@@ -152,10 +160,65 @@ const useCallbacks = () => {
     onSubmitOrderRejected,
     onOrderCreated,
     onOrderCancelled,
-    onCopy
+    onCopy,
   };
 };
 
 export const SpotHooks = {
   useCallbacks,
+};
+
+export const useSpotToken = (address?: string) => {
+  const currency = useCurrency(address);
+
+  return useMemo((): Token | undefined => {
+    if (!currency) return undefined;
+
+    return {
+      address: currency.address,
+      decimals: currency.decimals,
+      symbol: currency.symbol,
+      logoUrl: currency.logoUrl,
+    };
+  }, [currency]);
+};
+
+export const useSpotMarketReferencePrice = () => {
+  const { trade, isLoadingTrade } = useDerivedSwap();
+
+  return useMemo(() => {
+    return {
+      value: trade?.outAmount,
+      isLoading: isLoadingTrade,
+    };
+  }, [trade, isLoadingTrade]);
+};
+
+export const useSpotPartner = () => {
+  const { chainId } = useConnection();
+  const { partner } = useConfigParams();
+
+  return useMemo(() => {
+    if (partner) {
+      return partner;
+    }
+    if (!chainId) {
+      return Partners.THENA;
+    }
+    switch (chainId) {
+      case chains.base.id:
+      case chains.polygon.id:
+        return Partners.QUICKSWAP;
+      case chains.bsc.id:
+        return Partners.THENA;
+      case chains.sonic.id:
+        return Partners.SPOOKYSWAP;
+      case chains.sei.id:
+        return Partners.NAMI;
+      case chains.linea.id:
+        return Partners.LYNEX;
+      default:
+        return Partners.THENA;
+    }
+  }, [chainId, partner]);
 };

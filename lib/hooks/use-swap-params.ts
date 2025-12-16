@@ -1,7 +1,7 @@
 import { StringParam, useQueryParam, useQueryParams } from "use-query-params";
 import { SwapType } from "../types";
 import { useConnection } from "wagmi";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { getDefaultTokensForChain } from "../utils";
 
 export const useSwapParams = () => {
@@ -14,6 +14,12 @@ export const useSwapParams = () => {
   const defaultTokens = useMemo(() => {
     return getDefaultTokensForChain(chainId) 
   }, [chainId]);
+
+
+  useEffect(() => {
+    setCurrencies({ inputCurrency: undefined, outputCurrency: undefined });
+  }, [chainId, setCurrencies])
+  
 
   const effectiveInput = currencies.inputCurrency || defaultTokens?.input;
   const effectiveOutput = currencies.outputCurrency || defaultTokens?.output;

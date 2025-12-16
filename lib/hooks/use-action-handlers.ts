@@ -3,7 +3,6 @@ import { useSwapParams } from "./use-swap-params";
 import { Field, SwapType } from "../types";
 import { useSwapStore } from "./store";
 import { eqCompare } from "../utils";
-import BN from "bignumber.js";
 
 export const useActionHandlers = () => {
   const {

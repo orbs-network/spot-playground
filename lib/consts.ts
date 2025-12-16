@@ -1,4 +1,4 @@
-import { arbitrum, base, bsc, linea, mainnet, polygon } from "viem/chains";
+import { arbitrum, base, bsc, linea, mainnet, polygon, sei, sonic } from "viem/chains";
 import { TABS } from "./types";
 
 export const DEFAULT_TOKENS = {
@@ -26,6 +26,14 @@ export const DEFAULT_TOKENS = {
     input: "0x176211869ca2b568f2a7d4ee941e073a821ee1ff",
     output: "0xe5d7c2a44ffddf6b295a15c148167daaaf5cf34f",
   },
+  [sei.id]: {
+    input: "0xe30fedd158a2e3b13e9badaeabafc5516e95e8c7",
+    output: "0x5cf6826140c1c56ff49c808a1a75407cd1df9423",
+  },
+  [sonic.id]: {
+    input: "0x039e2fb66102314ce7b64ce5ce3e5183bc94ad38",
+    output: "0x29219dd400f2bf60e5a23d13be72b486d4038894",
+  },
 };
 
 
@@ -37,6 +45,8 @@ export const POPULAR_TOKENS = {
   [mainnet.id]:["0x6B175474E89094C44Da98b954EedeAC495271d0F", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48", "0xdAC17F958D2ee523a2206206994597C13D831ec7", "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599", "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2"],
   [arbitrum.id]:["0x82af49447d8a07e3bd95bd0d56f35241523fbab1", "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9", "0xaf88d065e77c8cc2239327c5edb3a432268e5831", "0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f"],
   [linea.id]:["0x176211869ca2b568f2a7d4ee941e073a821ee1ff","0xe5d7c2a44ffddf6b295a15c148167daaaf5cf34f", "0x3aab2285ddcddad8edf438c1bab47e1a9d05a9b4"],
+  [sonic.id]: ['0x039e2fb66102314ce7b64ce5ce3e5183bc94ad38','0x29219dd400f2bf60e5a23d13be72b486d4038894', "0x0555e30da8f98308edb960aa94c0db47230d2b9c", "0x6047828dc181963ba44974801ff68e538da5eaf9"],
+  [sei.id]: ["0xe30fedd158a2e3b13e9badaeabafc5516e95e8c7","0x5cf6826140c1c56ff49c808a1a75407cd1df9423", "0xe15fc38f6d8c56af07bbcbe3baf5708a2bf42392", "0x160345fc359604fc6e70e3c5facbde5f7a9342d8", "0xc68351b9b3638a6f4a3ae100bd251e227bbd7479"]
 };
 
 export const NATIVE_TOKENS_LOGO_URLS = {
@@ -47,6 +57,8 @@ export const NATIVE_TOKENS_LOGO_URLS = {
   [mainnet.id]: "https://s2.coinmarketcap.com/static/img/coins/128x128/1027.png",
   [arbitrum.id]: "https://s2.coinmarketcap.com/static/img/coins/128x128/1027.png",
   [linea.id]: "https://s2.coinmarketcap.com/static/img/coins/128x128/1027.png",
+  [sonic.id]: "https://s2.coinmarketcap.com/static/img/coins/128x128/32684.png",
+  [sei.id]: "https://s2.coinmarketcap.com/static/img/coins/128x128/23149.png",
 };
 
 export const DEFAULT_PRICE_PROTECTION = 5;
@@ -91,3 +103,6 @@ export const SPOT_TABS = [
   TABS.TAKE_PROFIT,
   TABS.TWAP,
 ];
+
+
+export const BUNGEE_NATIVE_TOKEN_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'

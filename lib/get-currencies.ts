@@ -42,7 +42,10 @@ export const getCurrencies = async (
       `https://tokens.coingecko.com/${name}/all.json`,
       { signal }
     );
-    let tokens = response.data.tokens.map(
+
+    const safeResponse = response.data.tokens.filter((token: { address: string }) => token.address.startsWith("0x"));
+
+    let tokens = safeResponse.map(
       (token: {
         address: string;
         symbol: string;

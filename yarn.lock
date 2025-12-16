@@ -1088,32 +1088,32 @@
   resolved "https://registry.yarnpkg.com/@orbs-network/liquidity-hub-sdk/-/liquidity-hub-sdk-1.0.97.tgz#9a008615ca8977c1647c68b005e6f8cbb4033c55"
   integrity sha512-iQ0hDJqhXFBtZwTsMH2zuVu2y8c+pIiKOBtqgz7qzKTzwmGl+3hixuR3Riw2JJmKf2s7+zwZvku8boXTvGDuNA==
 
-"@orbs-network/spot@^1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@orbs-network/spot/-/spot-1.5.0.tgz#6b8b16a37951f9018f887a777bf5923134db40ba"
-  integrity sha512-8dcXy+IMJbsjG3F4baGcxQzJhAXJlAUPw3zWa7inO0KIdhd+7SFvtE5krlROAUYSd9h8dhOV6uthd5v245h6XQ==
+"@orbs-network/spot@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@orbs-network/spot/-/spot-1.7.0.tgz#51981de866d0d2dbc30532bb1fcebc2fef2382c8"
+  integrity sha512-ay1pMu3+QxEoF6LVVpGxbMCrT/mziaH6uKoXQskDeCjnjd/0lDtmtxL7dU2QUPmZW2qErVMljsLr4uYlqQ4a4g==
 
 "@orbs-network/swap-ui@^0.0.61":
   version "0.0.61"
   resolved "https://registry.yarnpkg.com/@orbs-network/swap-ui/-/swap-ui-0.0.61.tgz#ec82fffbd68274373f965f247e405aa7d17d86b3"
   integrity sha512-GCPAXf69usNQulQbMNGpGW+cgvoeu/R6T8xKiL7pSMMYs6L2sMP8b2YBeHn53lO8/LRaFrFDf28EB7Gh7xzgiQ==
 
-"@orbs-network/twap-sdk@^5.0.107":
-  version "5.0.107"
-  resolved "https://registry.yarnpkg.com/@orbs-network/twap-sdk/-/twap-sdk-5.0.107.tgz#cf7f5df3e6b70668002152156c6c903c2eadc108"
-  integrity sha512-A7Sv9GJVmXfUMI/jXGt600qfrFSNg64DFWcvQb8mzI03icc1XphR5lccdhUOf3oe0m/Bb2a7qi1ilPgvY1i3Vg==
+"@orbs-network/twap-sdk@^5.0.111":
+  version "5.0.111"
+  resolved "https://registry.yarnpkg.com/@orbs-network/twap-sdk/-/twap-sdk-5.0.111.tgz#eeca7646d68df394f04c7cc4b7df58fd4b4e5e15"
+  integrity sha512-ms5JtNPqA1RYq+cKfOkNznGRat1/luvsPvliGhsJTX5rOgFOcajPqkbAxRY+QbcnLu8c4dx79ppbmOj6leg0/A==
   dependencies:
-    "@orbs-network/spot" "^1.5.0"
+    "@orbs-network/spot" "^1.7.0"
     "@orbs-network/twap" "^2.7.28"
     bignumber.js "9.x"
 
-"@orbs-network/twap-ui@^5.0.107":
-  version "5.0.107"
-  resolved "https://registry.yarnpkg.com/@orbs-network/twap-ui/-/twap-ui-5.0.107.tgz#f5c02f3da3236dd157fe1f4b0b7a9c66920a6624"
-  integrity sha512-cc4QT1op+2VP+NAJAEG2HtF8a+v+RXRpJDr10yp6fdgFecyU169AgvYsRN4z38zxYlhor27CJboRniyYxt7rKg==
+"@orbs-network/twap-ui@^5.0.111":
+  version "5.0.111"
+  resolved "https://registry.yarnpkg.com/@orbs-network/twap-ui/-/twap-ui-5.0.111.tgz#4a99bd3de1fbee93ca431fbda3d3450cd6638b4e"
+  integrity sha512-YdfY9XbJnG6beUMHCFvBBgjzp5T2pybCtOhgXNLCbrD+N0eguxmZt7cDA9pP5EKBulMSytcvegmwRfICao12mg==
   dependencies:
     "@orbs-network/swap-ui" "^0.0.61"
-    "@orbs-network/twap-sdk" "^5.0.107"
+    "@orbs-network/twap-sdk" "^5.0.111"
     "@react-icons/all-files" "^4.1.0"
     "@tanstack/react-query" "4.x"
     bignumber.js "9.x"

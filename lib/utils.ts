@@ -3,7 +3,7 @@ import { twMerge } from "tailwind-merge";
 import { Currency, USDPrices } from "./types";
 import { Balances } from "./types";
 import BN from "bignumber.js";
-import { formatUnits, zeroAddress } from "viem";
+import { formatUnits, parseUnits, zeroAddress } from "viem";
 import _ from "lodash";
 import { wCurrencies } from "./wrapped-currencies";
 import {
@@ -220,4 +220,15 @@ export function getFirstAndLastLetter(symbol?: string): string {
   if (!symbol) return "";
   const s = symbol.trim().toUpperCase();
   return s.length <= 1 ? s : `${s[0]}${s[s.length - 1]}`;
+}
+
+export const toAmountWei  = (value?: string, decimals?: number) => {
+
+  if (!decimals || !value) return "0";
+  return parseUnits(value, decimals).toString();
+}
+
+export const toAmountUI  = (value?: string, decimals?: number) => {
+  if (!decimals || !value) return "0";
+  return formatUnits(BigInt(value), decimals);
 }

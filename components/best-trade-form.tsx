@@ -60,8 +60,8 @@ const Detail = ({ title, value }: { title: string; value: ReactNode }) => {
 };
 
 const NetworkCost = () => {
-  const { quote, outputCurrency } = useDerivedSwap();
-  const amount = useToAmountUI(outputCurrency?.decimals, quote?.gasAmountOut);
+  const { trade, outputCurrency } = useDerivedSwap();
+  const amount = useToAmountUI(outputCurrency?.decimals, trade?.gas);
   const usd = useUSDPrice({
     token: outputCurrency?.address,
     amount: amount,
@@ -109,8 +109,8 @@ const Rate = () => {
 };
 
 const MinimumAmountOut = () => {
-  const { quote, outputCurrency } = useDerivedSwap();
-  const amount = useToAmountUI(outputCurrency?.decimals, quote?.minAmountOut);
+  const { trade, outputCurrency } = useDerivedSwap();
+  const amount = useToAmountUI(outputCurrency?.decimals, trade?.minAmountOut);
   const formatted = useFormatNumber({ value: amount });
   return (
     <Detail
@@ -144,7 +144,7 @@ const SubmitSwap = () => {
     outputCurrency,
     inputAmount,
     outputAmount,
-    isLoadingQuote,
+    isLoadingTrade,
   } = useDerivedSwap();
   const { setInputAmount, } = useActionHandlers();
   const { status, totalSteps, currentStepIndex, reset } = useSwapBestTrade();
@@ -184,8 +184,8 @@ const SubmitSwap = () => {
     <Dialog open={open} onOpenChange={onClose}>
       <SubmitSwapButton
         onClick={onOpen}
-        isLoading={isLoadingQuote}
-        text={isLoadingQuote ? "Fetching Quote..." : "Submit Swap"}
+        isLoading={isLoadingTrade}
+        text={isLoadingTrade ? "Fetching Quote..." : "Submit Swap"}
       />
       <DialogContent>
         <DialogHeader>
@@ -255,7 +255,7 @@ const Main = () => {
 };
 
 export function SwapBestTradeForm() {
-  const { inputCurrency, outputCurrency, inputAmount, outputAmount, isLoadingQuote } =
+  const { inputCurrency, outputCurrency, inputAmount, outputAmount, isLoadingTrade } =
     useDerivedSwap();
   const { setInputAmount, handleCurrencyChange } = useActionHandlers();
 
@@ -280,7 +280,7 @@ export function SwapBestTradeForm() {
           disabled={true}
           amount={outputAmount}
           title="To"
-          isLoading={isLoadingQuote}
+          isLoading={isLoadingTrade}
         />
       </div>
       <SubmitSwap />
