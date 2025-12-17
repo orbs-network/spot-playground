@@ -45,7 +45,7 @@ export async function getUSDPrice(
   // Normalize to llama format: "chain:address"
 
   const includesNative = tokens.some((t) => isNativeAddress(t));
-  const wCurrencyAddress= getWrappedNativeCurrency(chainId).address;
+  const wCurrencyAddress= getWrappedNativeCurrency(chainId)?.address ?? "";
   const tokensWithChainId = tokens.map((t) => {
     let tokenAddress = t;
     if (isNativeAddress(t)) {

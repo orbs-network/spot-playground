@@ -48,7 +48,7 @@ const useQuoteLiquidityHub = (
     queryFn: async ({ signal }) => {
       const quote = await liquidityHub.getQuote({
         fromToken: isNativeAddress(inputCurrencyAddress)
-          ? getWrappedNativeCurrency(chainId!).address
+          ? getWrappedNativeCurrency(chainId!)?.address ?? ""
           : inputCurrencyAddress!,
         toToken: outputCurrencyAddress!,
         inAmount: parsedInputAmount,

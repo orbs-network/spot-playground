@@ -9,19 +9,21 @@ export const useWrap = () => {
   const { address: account, chainId } = useConnection();
   const { mutateAsync: getTransactionReceiptCallback } =
     useGetTransactionReceiptCallback();
+
+  const address = getWrappedNativeCurrency(chainId)?.address ?? "";
   return useMutation({
     mutationFn: async (amount: string) => {
       if (!walletClient) {
         throw new Error("Wallet client not found");
       }
-      if (!chainId) {
-        throw new Error("Chain id not found");
+      if (!address) {
+        throw new Error("Wrapped native currency address not found");
       }
       const hash = await walletClient.writeContract({
         abi: wethAbi,
         functionName: "deposit",
         account,
-        address: getWrappedNativeCurrency(chainId).address as `0x${string}`,
+        address: address as `0x${string}`,
         value: BigInt(amount),
         chain: walletClient.chain,
       });

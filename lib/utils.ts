@@ -29,7 +29,8 @@ export const isNativeAddress = (address?: string) => {
   return eqCompare(address ?? "", zeroAddress);
 };
 
-export const getWrappedNativeCurrency = (chainId: number) => {
+export const getWrappedNativeCurrency = (chainId?: number): Currency | undefined => {
+  if(!chainId) return undefined;
   return wCurrencies[chainId];
 };
 
@@ -139,7 +140,7 @@ export const parseNativeCurrencyAddress = (
   chainId: number
 ) => {
   if (isNativeAddress(address)) {
-    return getWrappedNativeCurrency(chainId).address;
+    return getWrappedNativeCurrency(chainId)?.address ?? "";
   }
   return address;
 };

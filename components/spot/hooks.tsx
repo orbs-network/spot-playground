@@ -28,7 +28,7 @@ const useCallbacks = () => {
 
   const symbol = useMemo(() => {
     return isNativeAddress(inputCurrency?.address)
-      ? getWrappedNativeCurrency(chainId!).symbol
+      ? getWrappedNativeCurrency(chainId!)?.symbol ?? ""
       : inputCurrency?.symbol;
   }, [inputCurrency?.address, inputCurrency?.symbol, chainId]);
 
